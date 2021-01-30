@@ -135,7 +135,11 @@ func main() {
 
 				r, rtt, err := c.Exchange(m, address)
 				if err != nil {
-					debugf("Error sending query: %v", err)
+					if err == dns.ErrFqdn {
+						debugf("Error sending query: %v. The specified domain should have a closing dot", err)
+					} else {
+						debugf("Error sending query: %v", err)
+					}
 					ResponseLostCount.Inc()
 					return
 				}
